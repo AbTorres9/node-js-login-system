@@ -29,18 +29,20 @@ exports.signup = async (req, res) => {
     }
 }
 
-exports.signin = (req, res) => {
-    const { email, password } = req.body;
+exports.signin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.status(400).json({
-            error: errors.array()[0].msg
-        })
-    }
 
-    User.findOne({ email }, (error, user) => {
-        if (error || !user) {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                error: errors.array()[0].msg
+            })
+        }
+
+        let user = await User.findOne({ email });
+        if (!user) {
             return res.status(400).json({
                 error: "User emaildoes not exist in db"
             })
@@ -58,13 +60,16 @@ exports.signin = (req, res) => {
         res.cookie("token", token, { expire: new Date() + 10 });
 
         //send response to front end
-        const { name, email, _id } = user;
+        const { name, email: usermail, _id } = user;
         return res.json({ token, user: { name, email, _id } })
-    })
-
+    } catch (err) {
+        res.status(500).json({
+            error: "Login failed"
+        })
+    }
 }
 
-exports.signout = function (req, res) {
+exports.signout = (req, res) => {
     res.clearCookie("token")
     res.json({
         message: "User Signout Successfully"

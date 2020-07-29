@@ -31,7 +31,7 @@ app.use("/api", userRoutes)
 
 
 //PORT
-PORT = process.env.PORT || 5009;
+PORT = process.env.PORT || 5000;
 
 //STARTING A SERVER
 app.listen(PORT, (req, res) => {
