@@ -16,7 +16,7 @@ exports.signup = async (req, res) => {
         }
 
         const user = await new User(req.body).save();
-        
+
         res.json({
             name: user.name,
             email: user.email,
@@ -30,7 +30,7 @@ exports.signup = async (req, res) => {
 }
 
 exports.signin = (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -39,32 +39,32 @@ exports.signin = (req, res) => {
         })
     }
 
-    User.findOne({email}, (error, user) => {
-        if (error || !user){
+    User.findOne({ email }, (error, user) => {
+        if (error || !user) {
             return res.status(400).json({
                 error: "User emaildoes not exist in db"
             })
         }
 
-        if(!user.autheticate(password)){
+        if (!user.autheticate(password)) {
             return res.status(401).json({
                 error: "Email and password do not match"
             })
         }
 
         //create token
-        const token = jwt.sign({_id: user._id}, process.env.SECRET)
+        const token = jwt.sign({ _id: user._id }, process.env.SECRET)
         //put token in cookie
-        res.cookie("token", token, {expire: new Date() + 10});
+        res.cookie("token", token, { expire: new Date() + 10 });
 
         //send response to front end
-        const {name, email, _id} = user;
-        return res.json({token, user: {name, email, _id}})
+        const { name, email, _id } = user;
+        return res.json({ token, user: { name, email, _id } })
     })
 
 }
 
-exports.signout = (req, res) => {
+exports.signout = function (req, res) {
     res.clearCookie("token")
     res.json({
         message: "User Signout Successfully"
@@ -74,7 +74,7 @@ exports.signout = (req, res) => {
 //protected routes
 exports.isSignedIn = expressJwt({
     secret: process.env.SECRET,
-    algorithms:['HS256'],
+    algorithms: ['HS256'],
     userProperty: "auth"
 })
 
@@ -82,10 +82,9 @@ exports.isSignedIn = expressJwt({
 exports.isAuthenticated = (req, res, next) => {
     let checker = req.profile && req.auth && req.profile._id == req.auth._id;
     if (!checker) {
-      return res.status(403).json({
-        error: "ACCESS DENIED"
-      });
+        return res.status(403).json({
+            error: "ACCESS DENIED"
+        });
     }
     next();
-  };
-
+};

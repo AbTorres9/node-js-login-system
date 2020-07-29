@@ -2,7 +2,7 @@ const User = require("../models/user")
 
 exports.getUserById = (req, res, next, id) => {
     User.findById(id).exec((error, user) => {
-        if(error || !user){
+        if (error || !user) {
             return res.status(400).json({
                 error: "No user was found in DB"
             })
@@ -21,13 +21,13 @@ exports.getUser = (req, res) => {
 
 exports.getAllUsers = (req, res) => {
     User.find().exec((error, users) => {
-        if(error || !users){
+        if (error || !users) {
             return res.status(400).json({
                 error: "No users was found in DB"
             })
-        
+
         }
-        
+
         return res.json(users)
     })
 }
@@ -35,11 +35,11 @@ exports.getAllUsers = (req, res) => {
 exports.updateUser = (req, res) => {
     User.findByIdAndUpdate(
 
-        {_id: req.profile._id},
-        {$set: req.body},
-        {new: true, useFindAndModify: false},
+        { _id: req.profile._id },
+        { $set: req.body },
+        { new: true, useFindAndModify: false },
         (error, user) => {
-            if(error){
+            if (error) {
                 return res.status(400).json({
                     error: "You are not authorized to update this info"
                 })
