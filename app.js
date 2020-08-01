@@ -10,7 +10,6 @@ const authRoutes = require("./routes/auth")
 const userRoutes = require("./routes/user")
 
 
-
 //DB Connection
 mongoose.connect('mongodb://localhost:27017/firstauth', {
     useNewUrlParser: true,
@@ -28,6 +27,7 @@ app.use(cookieParser());
 //MY ROUTES
 app.use("/api", authRoutes)
 app.use("/api", userRoutes)
+
 
 
 //PORT
