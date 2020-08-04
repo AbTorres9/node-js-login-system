@@ -3,12 +3,25 @@ var app = express();
 
 var router = express.Router();
 
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUi = require('swagger-ui-express')
 
 const { validationResult, check } = require("express-validator");
 const { signout, signup, signin, isSignedIn } = require("../controllers/auth");
 const { contextsKey } = require("express-validator/src/base");
 
 
+
+//Routes
+/**
+ * @swagger
+ * /api/signup
+ * post:
+ *  description: Allows new user to safely signup into the db
+ *  responses:
+ *      '200':
+ *          description: Asuccessful response
+ */
 router.post(
     "/signup",
     [

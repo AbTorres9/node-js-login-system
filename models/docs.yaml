@@ -1,0 +1,180 @@
+swagger: "2.0"
+info:
+  description: "User Login and Authentication System"
+  version: "1.0.0"
+  title: "User Login System"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "userloginsystem.swagger.io"
+basePath: "/v2"
+tags:
+  - name: "Auth"
+    description: "Everything about Authorization"
+    externalDocs:
+      description: "Find out more"
+      url: "http://swagger.io"
+  - name: "User"
+    description: "Operations about user"
+    externalDocs:
+      description: "Find out more about our store"
+      url: "http://swagger.io"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /api/signup:
+    post:
+      tags:
+        - "Auth"
+      summary: "Add a new User to the database"
+      description: ""
+      operationId: "addUser"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "adds user to database"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "405":
+          description: "Invalid input"
+  /api/signin:
+    post:
+      tags:
+        - "Auth"
+      summary: "Allows registered user to signin"
+      description: ""
+      operationId: "Signin User"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Allows user to signin"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "400":
+          description: "User emaildoes not exist in db"
+        "401":
+          description: "Email and password do not match"
+        "500":
+          description: "lOGIN FAILED"
+  /api/signout:
+    get:
+      tags:
+        - "Auth"
+      summary: "Lets user to signout"
+      description: "Allows user to signout"
+      operationId: "userSignout"
+      produces:
+        - "application/xml"
+        - "application/json"
+
+      responses:
+        "200":
+          description: "successful operation"
+  /api/user/{userId}:
+    get:
+      tags:
+        - "user"
+      summary: "Get user by user id"
+      description: ""
+      operationId: "getUserById"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "userId"
+          in: "path"
+          description: "Fetches user from db"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: "Invalid username supplied"
+        "404":
+          description: "User not found"
+    put:
+      tags:
+        - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "username"
+          in: "path"
+          description: "name that need to be updated"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Updated user object"
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        "400":
+          description: "Invalid user supplied"
+        "404":
+          description: "User not found"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      salt:
+        type: "string"
+
+    xml:
+      name: "User"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
